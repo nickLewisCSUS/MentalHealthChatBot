@@ -1,30 +1,23 @@
-# backend/main.py
+# backend/main.py (using Hugging Face)
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import openai
-import os
-from dotenv import load_dotenv
+from transformers import pipeline
 
-# Load environment variables
-load_dotenv()
-
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Initialize the Hugging Face model
+chatbot = pipeline("text2text-generation", model="google/flan-t5-large")
 
 app = FastAPI()
 
-# Define a message model for conversation data
 class Message(BaseModel):
     user_message: str
 
 @app.post("/chat")
 def get_response(message: Message):
     try:
-        # Call OpenAI's API for emotional support responses
-        response = openai.Completion.create(
-            engine="text-davinci-003",  
-            prompt=f"You are an empathetic mental health support assistant. Respond to: {message.user_message}",
-            max_tokens=150
-        )
-        return {"response": response.choices[0].text.strip()}
+        # Generate a response using the Hugging Face model
+        response = chatbot(f"You are a supportive mental health assistant. User says: {message.user_message}", max_length=100)
+        return {"response": response[0]['generated_text']}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
