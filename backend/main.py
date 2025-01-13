@@ -1,5 +1,6 @@
 # backend/main.py (using Hugging Face)
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from transformers import pipeline
 
@@ -7,6 +8,15 @@ from transformers import pipeline
 chatbot = pipeline("text2text-generation", model="google/flan-t5-large")
 
 app = FastAPI()
+
+# ✅ Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change to ["http://localhost:8000"] for better security
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 class Message(BaseModel):
     user_message: str

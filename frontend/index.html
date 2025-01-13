@@ -10,7 +10,7 @@
     <button onclick="sendMessage()">Send</button>
     <p id="botResponse"></p>
 
-    <script>
+    <!-- <script>
         async function sendMessage() {
             const userMessage = document.getElementById('userMessage').value;
             const response = await fetch('http://127.0.0.1:8000/chat', {
@@ -21,6 +21,8 @@
             const result = await response.json();
             document.getElementById('botResponse').innerText = result.response;
         }
-    </script>
+    </script> -->
+    <!-- Link the external JavaScript file -->
+    <script src="chatbot.js"></script>
 </body>
 </html>
