@@ -9,19 +9,8 @@
     <input type="text" id="userMessage" placeholder="How are you feeling today?">
     <button onclick="sendMessage()">Send</button>
     <p id="botResponse"></p>
-
-    <!-- <script>
-        async function sendMessage() {
-            const userMessage = document.getElementById('userMessage').value;
-            const response = await fetch('http://127.0.0.1:8000/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_message: userMessage })
-            });
-            const result = await response.json();
-            document.getElementById('botResponse').innerText = result.response;
-        }
-    </script> -->
+    
+    </script>
     <!-- Link the external JavaScript file -->
     <script src="chatbot.js"></script>
 </body>
