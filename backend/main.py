@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
+from better_profanity import profanity
 import torch
 import os
 
@@ -19,6 +20,7 @@ model = AutoModelForCausalLM.from_pretrained(model_name).half().to("cuda")  # FP
 chatbot = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=0)
 
 app = FastAPI()
+context_history = []
 
 # Enable CORS
 app.add_middleware(
@@ -33,28 +35,48 @@ app.add_middleware(
 class Message(BaseModel):
     user_message: str
 
-# POST Endpoint with Optimized Generation
 @app.post("/chat")
 def get_response(message: Message):
     try:
-        # Generate a faster response using FP16-optimized BlenderBot 3
+        global context_history
+        context_history.append(f"User: {message.user_message}")
+
+        # Limit the context history to the last 10 messages
+        if len(context_history) > 10:
+            context_history.pop(0)
+
+        # Combine context history into a single string
+        conversation_history = "\n".join(context_history)
+
+        formatted_input = (
+            f"You are a supportive mental health assistant. Respond with empathy and clarity.\n{conversation_history}"
+        )
+
+
+        # Generate response
         response = chatbot(
-    f"You are a supportive mental health assistant. Respond with empathy and clarity. User says: {message.user_message}",
-        max_length=100,
-        temperature=0.5,  # Lower value = less randomness
-        top_p=0.8         # Limits the range of token sampling
-)
-         # Post-process the response for inappropriate language
-        response_text = response[0]['generated_text']
-        inappropriate_terms = ["fuck", "ever", "shut up", "nonsense", "steak"]
-        if any(term in response_text.lower() for term in inappropriate_terms):
-            response_text = "I'm here to support you with kindness and care. Please share how you're feeling."
+            formatted_input,
+            max_new_tokens=100,
+            temperature=0.5,
+            top_p=0.8,
+        )
+
+        print("Raw response:", response)
+
+        # Extract the generated text
+        response_text = response[0].get("generated_text", "I'm here to help. Can you tell me more?")
+        response_text = response_text.strip()
+
+        # Add the bot's response to the context history
+        context_history.append(f"Bot: {response_text}")
+
+        # Filter profanity in the response
+        if profanity.contains_profanity(response_text):
+            response_text = "I'm here to provide emotional support. Please share how you're feeling."
 
         return {"response": response_text}
-    
     except Exception as e:
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
-
 
