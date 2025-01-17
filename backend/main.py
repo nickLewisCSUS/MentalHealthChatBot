@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
+from transformers import pipeline, AutoModelForSeq2SeqLM, AutoTokenizer
 from better_profanity import profanity
 import torch
 import os
@@ -16,8 +16,10 @@ torch.cuda.empty_cache()
 model_name = "facebook/blenderbot-400M-distill"
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name).half().to("cuda")  # FP16 + GPU
-chatbot = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=0)
+
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name).half().to("cuda")  # FP16 + GPU
+
+chatbot = pipeline("text2text-generation", model=model, tokenizer=tokenizer, max_new_tokens=1024, temperature=0, top_p=0.95, repetition_penalty=1.15)
 
 app = FastAPI()
 context_history = []
