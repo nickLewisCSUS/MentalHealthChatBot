@@ -2,17 +2,82 @@
 /* Chat bot container styles */
 
 #chat-container {
-    width: 400px;
-    height: 400px;
-    background-color: black;
+    width: auto;
+    height: auto;
     display: flex;
-    margin-bottom: 1%;
+    margin-bottom: 0 auto;
 }
 
 #chat-box-text {
     width: 100%;
-    height: 100%;
-    color: rgb(255, 255, 255);
+    height: auto;
+    color: rgb(0, 0, 0);
     margin: 0 auto;
     resize: none;
+    position: relative;
+}
+
+#chat-wrapper {
+    align-content: center;
+    background-color: grey;
+}
+
+
+
+/* ============================================== */
+/*     User input and submission area styles      */
+/* ============================================== */
+.user-input-submit-wrapper {
+    background-color: white;
+}
+
+.input-anchor {
+    width: 700px;
+    height: fit-content;
+    display: flex;                
+    flex-direction: column;       
+    align-items: stretch;
+    border: 2px solid black;    
+    padding: 10px;               
+    border-radius: 15px;         
+}
+
+.input-anchor textarea {
+    margin-bottom: 2px;      
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    resize: none;
+    box-sizing: border-box;  
+}
+
+
+.input-anchor textarea::-webkit-scrollbar {
+    width: 9px; /* Set scrollbar width */
+}
+
+.input-anchor textarea::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Track background */
+    border-radius: 4px; /* Rounded corners for the track */
+}
+
+.input-anchor textarea::-webkit-scrollbar-thumb {
+    background: #b3b3b3; /* Thumb color */
+    border-radius: 4px; /* Rounded corners for the thumb */
+    border: 2px solid #f0f0f0; /* Padding to the thumb */
+}
+
+.input-anchor textarea::-webkit-scrollbar-thumb:hover {
+    background: #8f8f8f; /* Thumb color on hover */
+    cursor: default;
+}
+
+
+.input-anchor button {
+    align-self: flex-end;   
+    cursor: pointer;       
+    border-radius: 10px;
+    margin-top: 10px
 }
