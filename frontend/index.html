@@ -2,15 +2,23 @@
 <html>
 <head>
   <title>Mental health AI</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
-    <!-- Chat bot interaction container -->
-    <div id="chat-container">
-        <div id="chat-output">{Bot Response Temp Text}</div>
-        <input type="text" id="userinput" placeholder="Type here...">
-        <button type="submit">Submit</button>
-    </div>
+
+  <!-- Chat bot interaction container -->
+  <div id="chat-container">
+    <textarea id="chat-box-text" readonly>
+
+      <!-- Bot response goes here (Testing for now) -->
+
+    </textarea>
+  </div>
+
+  <input type="text" id="user-input" placeholder="Type here...">
+  <button onclick="sendMessage()">Submit</button>
+
+  <script src="chatbot.js"></script>
 
 </body>
 </html>
