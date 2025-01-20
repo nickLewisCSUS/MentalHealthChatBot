@@ -7,18 +7,32 @@
 <body>
 
   <!-- Chat bot interaction container -->
-  <div id="chat-container">
-    <textarea id="chat-box-text" readonly>
+  <div id="chat-wrapper">
 
-      <!-- Bot response goes here (Testing for now) -->
+    <!-- Bot response goes here (Testing for now) -->
+    <div id="chat-container">
+      <textarea id="chat-box-text" readonly></textarea>
+    </div>
 
-    </textarea>
+    <!-- User input / submission field -->
+    <div class="user-input-submit-wrapper">
+      <div class="input-anchor" id="user-input-wrapper">
+        <textarea id="user-input" placeholder="Type here..."></textarea>
+        <button onclick="sendMessage()">Submit</button>
+      </div>
+
+      <script>
+        const textarea = document.querySelector('.input-anchor textarea');
+        textarea.addEventListener('input', function () {
+          this.style.height = 'auto'; 
+          this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+      </script>
+    </div>
   </div>
-
-  <input type="text" id="user-input" placeholder="Type here...">
-  <button onclick="sendMessage()">Submit</button>
 
   <script src="chatbot.js"></script>
 
 </body>
 </html>
+
