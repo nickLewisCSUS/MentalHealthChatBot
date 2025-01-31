@@ -8,11 +8,13 @@ export default function Index() {
 
   const sendMessage = async () => {
     try {
-      const res = await axios.post("http://10.0.2.2:8000/chat",{
+      const res = await axios.post("http://192.168.1.223:8000/chat",{
         user_message: message,
+      }, {
+          timeout: 10000 
       });
 
-      setResponse(res.data.repsonse);
+      setResponse(res.data.response);
     } catch (error){
       console.error("Error:", error);
       setResponse("Error communicating with chatbot.")
