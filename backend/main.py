@@ -1,5 +1,5 @@
 import logging
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from transformers import pipeline, AutoModelForSeq2SeqLM, AutoTokenizer
@@ -37,6 +37,8 @@ chatbot = pipeline(
     do_sample=True,  # Fix warning
 )
 
+limiter = Limiter(key_func=lambda: "some_unique_identifier")  # You can define a custom function for unique identification
+
 app = FastAPI()
 context_history = []
 MAX_HISTORY = 10  # Limit conversation memory
@@ -58,7 +60,7 @@ import asyncio
 
 @app.post("/chat")
 @limiter.limit("5/minute")  # 5 messages per minute per user
-async def get_response(message: Message):  # Make function async
+async def get_response(request: Request, message: Message):  # Add 'request' here
     try:
         logging.info(f"User input: {message.user_message}")  # Log user input
 
